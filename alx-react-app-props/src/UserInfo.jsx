@@ -1,6 +1,7 @@
 import UserProfile from './UserProfile';
 
 function UserInfo() {
-    return <UserProfile />;
+  return <UserProfile />;
 }
+
 export default UserInfo;
