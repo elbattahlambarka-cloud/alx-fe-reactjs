@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import useRecipeStore from './recipeStore'
 
 const RecipeList = () => {
@@ -16,8 +17,16 @@ const RecipeList = () => {
             margin: '10px 0',
             borderRadius: '8px'
           }}>
-            <h3 style={{ color: 'navy', marginBottom: '10px' }}>{recipe.title}</h3>
-            <p style={{ color: '#555' }}>{recipe.description}</p>
+            <Link 
+              to={`/recipe/${recipe.id}`}
+              style={{ 
+                textDecoration: 'none',
+                color: 'inherit'
+              }}
+            >
+              <h3 style={{ color: 'navy', marginBottom: '10px' }}>{recipe.title}</h3>
+              <p style={{ color: '#555' }}>{recipe.description}</p>
+            </Link>
           </div>
         ))
       )}
