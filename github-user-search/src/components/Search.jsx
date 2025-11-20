@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import githubService from '../services/githubApi';
+import { fetchUserData } from '../services/githubService';
 
 const Search = () => {
   const [username, setUsername] = useState('');
@@ -16,7 +16,7 @@ const Search = () => {
     setUserData(null);
 
     try {
-      const data = await githubService.fetchUserData(username);
+      const data = await fetchUserData(username);
       setUserData(data);
     } catch (err) {
       setError('Looks like we cant find the user');
@@ -180,56 +180,23 @@ const Search = () => {
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            <a
-              href={userData.html_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                padding: '10px 20px',
-                backgroundColor: '#0366d6',
-                color: 'white',
-                textDecoration: 'none',
-                borderRadius: '6px',
-                fontSize: '14px',
-                fontWeight: '500'
-              }}
-            >
-              View GitHub Profile
-            </a>
-            {userData.blog && (
-              <a
-                href={userData.blog}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  padding: '10px 20px',
-                  backgroundColor: '#f6f8fa',
-                  color: '#24292e',
-                  textDecoration: 'none',
-                  border: '1px solid #e1e4e8',
-                  borderRadius: '6px',
-                  fontSize: '14px',
-                  fontWeight: '500'
-                }}
-              >
-                Website
-              </a>
-            )}
-          </div>
-
-          {userData.location && (
-            <div style={{ 
-              marginTop: '15px',
-              padding: '10px',
-              backgroundColor: '#f6f8fa',
+          <a
+            href={userData.html_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              padding: '10px 20px',
+              backgroundColor: '#0366d6',
+              color: 'white',
+              textDecoration: 'none',
               borderRadius: '6px',
               fontSize: '14px',
-              color: '#586069'
-            }}>
-              📍 {userData.location}
-            </div>
-          )}
+              fontWeight: '500',
+              display: 'inline-block'
+            }}
+          >
+            View GitHub Profile
+          </a>
         </div>
       )}
     </div>
