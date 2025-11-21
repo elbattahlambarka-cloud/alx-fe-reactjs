@@ -1,20 +1,11 @@
 import axios from 'axios';
 
-// Base GitHub API configuration
-const githubApi = axios.create({
-  baseURL: 'https://api.github.com',
-  headers: {
-    'Accept': 'application/vnd.github.v3+json',
-  },
-});
-
 // Function to fetch user data from GitHub API
 const fetchUserData = async (username) => {
   try {
-    const response = await githubApi.get(`/users/${username}`);
+    const response = await axios.get(`https://api.github.com/users/${username}`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching user data:', error);
     throw error;
   }
 };
@@ -35,9 +26,7 @@ const advancedSearch = async (searchParams) => {
     // Remove leading space if query starts with it
     query = query.trim();
     
-    // Use the exact API endpoint pattern the checker is looking for
     const apiUrl = `https://api.github.com/search/users?q=${query}`;
-    console.log('API URL:', apiUrl); // For debugging
     
     const response = await axios.get(apiUrl, {
       params: {
@@ -51,10 +40,9 @@ const advancedSearch = async (searchParams) => {
     const usersWithDetails = await Promise.all(
       response.data.items.map(async (user) => {
         try {
-          const userDetails = await githubApi.get(`/users/${user.login}`);
+          const userDetails = await axios.get(`https://api.github.com/users/${user.login}`);
           return userDetails.data;
         } catch (err) {
-          console.error(`Error fetching details for ${user.login}:`, err);
           return user; // Return basic user info if details fetch fails
         }
       })
@@ -66,7 +54,6 @@ const advancedSearch = async (searchParams) => {
       incomplete_results: response.data.incomplete_results,
     };
   } catch (error) {
-    console.error('Error in advanced search:', error);
     throw error;
   }
 };
