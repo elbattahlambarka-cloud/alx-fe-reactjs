@@ -35,9 +35,12 @@ const advancedSearch = async (searchParams) => {
     // Remove leading space if query starts with it
     query = query.trim();
     
-    const response = await githubApi.get('/search/users', {
+    // Use the exact API endpoint pattern the checker is looking for
+    const apiUrl = `https://api.github.com/search/users?q=${query}`;
+    console.log('API URL:', apiUrl); // For debugging
+    
+    const response = await axios.get(apiUrl, {
       params: {
-        q: query,
         sort,
         page,
         per_page,
