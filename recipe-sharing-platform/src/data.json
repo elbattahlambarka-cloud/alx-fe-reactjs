@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "title": "Spaghetti Carbonara",
+    "summary": "A classic Italian pasta dish with eggs, cheese, bacon, and black pepper.",
+    "image": "https://via.placeholder.com/400x300/4F46E5/FFFFFF?text=Carbonara"
+  },
+  {
+    "id": 2,
+    "title": "Chicken Tikka Masala",
+    "summary": "Chunks of grilled chicken (tikka) cooked in a smooth buttery & creamy tomato based gravy.",
+    "image": "https://via.placeholder.com/400x300/DC2626/FFFFFF?text=Tikka+Masala"
+  },
+  {
+    "id": 3,
+    "title": "Chocolate Chip Cookies",
+    "summary": "Soft, chewy cookies loaded with chocolate chips, perfect with a glass of milk.",
+    "image": "https://via.placeholder.com/400x300/F59E0B/FFFFFF?text=Chocolate+Chips"
+  },
+  {
+    "id": 4,
+    "title": "Vegetable Stir Fry",
+    "summary": "Colorful mix of fresh vegetables quickly cooked in a wok with savory sauces.",
+    "image": "https://via.placeholder.com/400x300/10B981/FFFFFF?text=Stir+Fry"
+  },
+  {
+    "id": 5,
+    "title": "Beef Burgers",
+    "summary": "Juicy grilled beef patties with lettuce, tomato, and special sauce in a soft bun.",
+    "image": "https://via.placeholder.com/400x300/EF4444/FFFFFF?text=Beef+Burgers"
+  },
+  {
+    "id": 6,
+    "title": "Caesar Salad",
+    "summary": "Crisp romaine lettuce with Caesar dressing, croutons, and parmesan cheese.",
+    "image": "https://via.placeholder.com/400x300/84CC16/FFFFFF?text=Caesar+Salad"
+  }
+]
