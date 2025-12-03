@@ -42,11 +42,11 @@ function HomePage() {
             Discover, share, and create delicious recipes from around the world. 
             Browse our collection and find your next favorite dish!
           </p>
-          <div className="mt-8">
-            <button className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105 shadow-lg">
-              Add New Recipe
-            </button>
-          </div>
+          <Link to="/add-recipe">
+  <button className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105 shadow-lg">
+    Add New Recipe
+  </button>
+</Link>
         </header>
 
         {/* Recipe Grid */}
