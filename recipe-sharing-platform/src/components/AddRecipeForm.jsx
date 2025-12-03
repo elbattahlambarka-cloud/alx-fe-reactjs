@@ -5,7 +5,7 @@ function AddRecipeForm() {
   // Form state
   const [title, setTitle] = useState('');
   const [ingredients, setIngredients] = useState('');
-  const [instructions, setInstructions] = useState('');
+  const [steps, setSteps] = useState(''); // Changed from instructions to steps
   
   // Validation errors
   const [errors, setErrors] = useState({});
@@ -23,8 +23,8 @@ function AddRecipeForm() {
       case 'ingredients':
         setIngredients(e.target.value);
         break;
-      case 'instructions':
-        setInstructions(e.target.value);
+      case 'steps': // Changed to steps
+        setSteps(e.target.value);
         break;
       default:
         break;
@@ -58,9 +58,9 @@ function AddRecipeForm() {
       }
     }
 
-    // Check for instructions
-    if (!instructions.trim()) {
-      newErrors.instructions = 'Instructions are required';
+    // Check for steps
+    if (!steps.trim()) {
+      newErrors.steps = 'Preparation steps are required'; // Changed to steps
     }
 
     return newErrors;
@@ -81,13 +81,13 @@ function AddRecipeForm() {
     setIsSubmitted(true);
     
     // In a real application, you would send data to an API here
-    console.log('Form submitted:', { title, ingredients, instructions });
+    console.log('Form submitted:', { title, ingredients, steps });
     
     // Reset form after 3 seconds
     setTimeout(() => {
       setTitle('');
       setIngredients('');
-      setInstructions('');
+      setSteps(''); // Changed to steps
       setErrors({});
       setIsSubmitted(false);
     }, 3000);
@@ -157,25 +157,25 @@ function AddRecipeForm() {
               )}
             </div>
 
-            {/* Instructions */}
+            {/* Steps (Changed from instructions) */}
             <div>
-              <label htmlFor="instructions" className="block text-gray-700 font-semibold mb-2">
+              <label htmlFor="steps" className="block text-gray-700 font-semibold mb-2">
                 Preparation Steps *
                 <span className="text-gray-500 text-sm font-normal ml-2">
                   (Enter step-by-step instructions)
                 </span>
               </label>
               <textarea
-                id="instructions"
-                name="instructions"
-                value={instructions}
+                id="steps" // Changed to steps
+                name="steps" // Changed to steps
+                value={steps} // Changed to steps
                 onChange={handleChange}
                 rows="5"
-                className={`w-full px-4 py-3 rounded-lg border ${errors.instructions ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent`}
+                className={`w-full px-4 py-3 rounded-lg border ${errors.steps ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent`}
                 placeholder="Enter step-by-step instructions&#10;Example:&#10;1. Preheat oven to 350°F&#10;2. Mix dry ingredients together&#10;3. Add wet ingredients and mix well"
               />
-              {errors.instructions && (
-                <p className="text-red-500 text-sm mt-1">{errors.instructions}</p>
+              {errors.steps && ( // Changed to steps
+                <p className="text-red-500 text-sm mt-1">{errors.steps}</p>
               )}
             </div>
           </div>
