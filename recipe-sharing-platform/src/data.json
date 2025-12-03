@@ -3,36 +3,116 @@
     "id": 1,
     "title": "Spaghetti Carbonara",
     "summary": "A classic Italian pasta dish with eggs, cheese, bacon, and black pepper.",
-    "image": "https://via.placeholder.com/400x300/4F46E5/FFFFFF?text=Carbonara"
+    "image": "https://via.placeholder.com/800x500/4F46E5/FFFFFF?text=Carbonara",
+    "description": "Spaghetti Carbonara is a classic Roman pasta dish made with eggs, hard cheese, cured pork, and black pepper. The dish is simple yet incredibly flavorful.",
+    "prepTime": "15 mins",
+    "cookTime": "15 mins",
+    "servings": 4,
+    "difficulty": "Medium",
+    "ingredients": [
+      "400g spaghetti",
+      "200g pancetta or guanciale, diced",
+      "4 large eggs",
+      "100g Pecorino Romano cheese, grated",
+      "100g Parmesan cheese, grated",
+      "Freshly ground black pepper",
+      "Salt for pasta water"
+    ],
+    "instructions": [
+      "Bring a large pot of salted water to boil. Cook spaghetti according to package directions.",
+      "While pasta cooks, heat a large skillet over medium heat. Add pancetta and cook until crispy.",
+      "In a bowl, whisk together eggs, grated cheeses, and plenty of black pepper.",
+      "Drain pasta, reserving 1 cup of pasta water.",
+      "Quickly toss hot pasta with pancetta and fat in the skillet.",
+      "Remove from heat and quickly stir in egg mixture, adding pasta water as needed to create a creamy sauce.",
+      "Serve immediately with extra cheese and pepper."
+    ],
+    "nutrition": {
+      "calories": 650,
+      "protein": "28g",
+      "carbs": "75g",
+      "fat": "25g"
+    }
   },
   {
     "id": 2,
     "title": "Chicken Tikka Masala",
     "summary": "Chunks of grilled chicken (tikka) cooked in a smooth buttery & creamy tomato based gravy.",
-    "image": "https://via.placeholder.com/400x300/DC2626/FFFFFF?text=Tikka+Masala"
+    "image": "https://via.placeholder.com/800x500/DC2626/FFFFFF?text=Tikka+Masala",
+    "description": "Chicken Tikka Masala consists of roasted marinated chicken chunks in a spiced curry sauce. The sauce is usually creamy, orange, and mildly spiced.",
+    "prepTime": "30 mins",
+    "cookTime": "45 mins",
+    "servings": 6,
+    "difficulty": "Medium",
+    "ingredients": [
+      "800g chicken breast, cubed",
+      "250ml plain yogurt",
+      "2 tbsp ginger-garlic paste",
+      "2 tsp garam masala",
+      "400g canned tomatoes",
+      "200ml heavy cream",
+      "2 medium onions, finely chopped",
+      "3 tbsp vegetable oil",
+      "1 tsp turmeric powder",
+      "2 tsp cumin powder",
+      "1 tsp chili powder",
+      "Fresh coriander for garnish"
+    ],
+    "instructions": [
+      "Marinate chicken in yogurt, ginger-garlic paste, and 1 tsp garam masala for 2 hours.",
+      "Grill or bake chicken until cooked through and slightly charred.",
+      "Heat oil in a large pan, sauté onions until golden brown.",
+      "Add spices and cook for 2 minutes until fragrant.",
+      "Add tomatoes and cook until oil separates from the masala.",
+      "Add cream and simmer for 10 minutes.",
+      "Add grilled chicken and simmer for 5 more minutes.",
+      "Garnish with fresh coriander and serve with rice or naan."
+    ],
+    "nutrition": {
+      "calories": 420,
+      "protein": "35g",
+      "carbs": "15g",
+      "fat": "25g"
+    }
   },
   {
     "id": 3,
     "title": "Chocolate Chip Cookies",
     "summary": "Soft, chewy cookies loaded with chocolate chips, perfect with a glass of milk.",
-    "image": "https://via.placeholder.com/400x300/F59E0B/FFFFFF?text=Chocolate+Chips"
-  },
-  {
-    "id": 4,
-    "title": "Vegetable Stir Fry",
-    "summary": "Colorful mix of fresh vegetables quickly cooked in a wok with savory sauces.",
-    "image": "https://via.placeholder.com/400x300/10B981/FFFFFF?text=Stir+Fry"
-  },
-  {
-    "id": 5,
-    "title": "Beef Burgers",
-    "summary": "Juicy grilled beef patties with lettuce, tomato, and special sauce in a soft bun.",
-    "image": "https://via.placeholder.com/400x300/EF4444/FFFFFF?text=Beef+Burgers"
-  },
-  {
-    "id": 6,
-    "title": "Caesar Salad",
-    "summary": "Crisp romaine lettuce with Caesar dressing, croutons, and parmesan cheese.",
-    "image": "https://via.placeholder.com/400x300/84CC16/FFFFFF?text=Caesar+Salad"
+    "image": "https://via.placeholder.com/800x500/F59E0B/FFFFFF?text=Chocolate+Chips",
+    "description": "These classic chocolate chip cookies are soft, chewy, and loaded with chocolate chips. Perfect for any occasion!",
+    "prepTime": "15 mins",
+    "cookTime": "10 mins",
+    "servings": 24,
+    "difficulty": "Easy",
+    "ingredients": [
+      "225g unsalted butter, softened",
+      "200g granulated sugar",
+      "220g brown sugar",
+      "2 large eggs",
+      "2 tsp vanilla extract",
+      "375g all-purpose flour",
+      "1 tsp baking soda",
+      "1/2 tsp salt",
+      "350g chocolate chips",
+      "Optional: 1 cup chopped nuts"
+    ],
+    "instructions": [
+      "Preheat oven to 190°C (375°F). Line baking sheets with parchment paper.",
+      "In a large bowl, cream together butter and both sugars until light and fluffy.",
+      "Beat in eggs one at a time, then stir in vanilla.",
+      "Combine flour, baking soda, and salt in a separate bowl.",
+      "Gradually add dry ingredients to wet ingredients, mixing until just combined.",
+      "Stir in chocolate chips (and nuts if using).",
+      "Drop rounded tablespoons of dough onto prepared baking sheets.",
+      "Bake for 9-11 minutes until edges are golden brown.",
+      "Cool on baking sheet for 5 minutes, then transfer to wire rack."
+    ],
+    "nutrition": {
+      "calories": 220,
+      "protein": "2g",
+      "carbs": "30g",
+      "fat": "11g"
+    }
   }
 ]
