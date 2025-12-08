@@ -1,4 +1,4 @@
-// src/components/formikForm.jsx
+// src/components/formikForm.js
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -11,7 +11,7 @@ function FormikForm() {
     password: '',
   };
 
-  // Yup validation schema - exactly what the check is looking for
+  // Yup validation schema
   const validationSchema = Yup.object({
     username: Yup.string()
       .required('Username is required'),
@@ -24,8 +24,8 @@ function FormikForm() {
 
   // Handle form submission
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
-    console.log('Formik form submitted:', values);
-    alert(`Formik Registration successful for ${values.username}!`);
+    console.log('Form submitted:', values);
+    alert(`Registration successful for ${values.username}!`);
     resetForm();
     setSubmitting(false);
   };
@@ -108,7 +108,7 @@ function FormikForm() {
   );
 }
 
-// Inline styles (matching the controlled form)
+// Inline styles
 const styles = {
   container: {
     minHeight: '100vh',
