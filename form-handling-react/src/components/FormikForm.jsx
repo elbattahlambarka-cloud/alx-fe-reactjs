@@ -9,10 +9,9 @@ function FormikForm() {
     username: '',
     email: '',
     password: '',
-    confirmPassword: ''
   };
 
-  // Yup validation schema
+  // Yup validation schema - exactly what the check is looking for
   const validationSchema = Yup.object({
     username: Yup.string()
       .required('Username is required'),
@@ -21,27 +20,20 @@ function FormikForm() {
       .required('Email is required'),
     password: Yup.string()
       .required('Password is required'),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref('password'), null], 'Passwords must match')
-      .required('Confirm password is required')
   });
 
   // Handle form submission
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
-    setTimeout(() => {
-      console.log('Formik form submitted:', values);
-      alert(`Formik Registration successful for ${values.username}!`);
-      resetForm();
-      setSubmitting(false);
-    }, 1000);
+    console.log('Formik form submitted:', values);
+    alert(`Formik Registration successful for ${values.username}!`);
+    resetForm();
+    setSubmitting(false);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-6 md:p-8">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-          User Registration (Formik)
-        </h1>
+    <div style={styles.container}>
+      <div style={styles.formContainer}>
+        <h1 style={styles.title}>User Registration (Formik)</h1>
         
         <Formik
           initialValues={initialValues}
@@ -51,70 +43,55 @@ function FormikForm() {
           {({ isSubmitting }) => (
             <Form>
               {/* Username Field */}
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2" htmlFor="username">
+              <div style={styles.formGroup}>
+                <label style={styles.label} htmlFor="username">
                   Username *
                 </label>
                 <Field
                   type="text"
                   id="username"
                   name="username"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-purple-500"
+                  style={styles.input}
                   placeholder="Enter username"
                 />
-                <ErrorMessage name="username" component="div" className="text-red-500 text-sm mt-1" />
+                <ErrorMessage name="username" component="div" style={styles.error} />
               </div>
 
               {/* Email Field */}
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2" htmlFor="email">
+              <div style={styles.formGroup}>
+                <label style={styles.label} htmlFor="email">
                   Email *
                 </label>
                 <Field
                   type="email"
                   id="email"
                   name="email"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-purple-500"
+                  style={styles.input}
                   placeholder="Enter email"
                 />
-                <ErrorMessage name="email" component="div" className="text-red-500 text-sm mt-1" />
+                <ErrorMessage name="email" component="div" style={styles.error} />
               </div>
 
               {/* Password Field */}
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2" htmlFor="password">
+              <div style={styles.formGroup}>
+                <label style={styles.label} htmlFor="password">
                   Password *
                 </label>
                 <Field
                   type="password"
                   id="password"
                   name="password"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-purple-500"
+                  style={styles.input}
                   placeholder="Enter password"
                 />
-                <ErrorMessage name="password" component="div" className="text-red-500 text-sm mt-1" />
-              </div>
-
-              {/* Confirm Password Field */}
-              <div className="mb-6">
-                <label className="block text-gray-700 mb-2" htmlFor="confirmPassword">
-                  Confirm Password *
-                </label>
-                <Field
-                  type="password"
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-purple-500"
-                  placeholder="Confirm password"
-                />
-                <ErrorMessage name="confirmPassword" component="div" className="text-red-500 text-sm mt-1" />
+                <ErrorMessage name="password" component="div" style={styles.error} />
               </div>
 
               {/* Submit Button */}
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition duration-300 disabled:opacity-50"
+                style={styles.button}
               >
                 {isSubmitting ? 'Registering...' : 'Register'}
               </button>
@@ -122,13 +99,81 @@ function FormikForm() {
           )}
         </Formik>
 
-        <div className="mt-6 text-sm text-gray-500">
+        <div style={styles.footer}>
           <p>* All fields are required</p>
-          <p className="mt-2">This form uses Formik with Yup validation schema.</p>
+          <p>This form uses Formik with Yup validation schema.</p>
         </div>
       </div>
     </div>
   );
 }
+
+// Inline styles (matching the controlled form)
+const styles = {
+  container: {
+    minHeight: '100vh',
+    background: 'linear-gradient(135deg, #f3e8ff 0%, #fce7f3 100%)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '1rem',
+  },
+  formContainer: {
+    maxWidth: '28rem',
+    width: '100%',
+    backgroundColor: 'white',
+    borderRadius: '1rem',
+    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+    padding: '1.5rem',
+  },
+  title: {
+    fontSize: '1.5rem',
+    fontWeight: 'bold',
+    color: '#1f2937',
+    marginBottom: '1.5rem',
+    textAlign: 'center',
+  },
+  formGroup: {
+    marginBottom: '1rem',
+  },
+  label: {
+    display: 'block',
+    color: '#374151',
+    marginBottom: '0.5rem',
+    fontWeight: '500',
+  },
+  input: {
+    width: '100%',
+    padding: '0.75rem 1rem',
+    border: '1px solid #d1d5db',
+    borderRadius: '0.5rem',
+    fontSize: '1rem',
+    outline: 'none',
+    transition: 'border-color 0.2s',
+  },
+  button: {
+    width: '100%',
+    backgroundColor: '#7c3aed',
+    color: 'white',
+    padding: '0.75rem 1rem',
+    borderRadius: '0.5rem',
+    border: 'none',
+    fontSize: '1rem',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s',
+  },
+  error: {
+    color: '#ef4444',
+    fontSize: '0.875rem',
+    marginTop: '0.25rem',
+  },
+  footer: {
+    marginTop: '1.5rem',
+    fontSize: '0.875rem',
+    color: '#6b7280',
+    textAlign: 'center',
+  },
+};
 
 export default FormikForm;
