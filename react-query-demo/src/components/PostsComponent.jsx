@@ -4,18 +4,21 @@ import { useQuery } from '@tanstack/react-query';
 
 // Function to fetch posts from API
 const fetchPosts = async () => {
+  console.log('Fetching posts from API...');
   const response = await fetch('https://jsonplaceholder.typicode.com/posts');
   if (!response.ok) {
     throw new Error('Failed to fetch posts');
   }
-  return response.json();
+  const data = await response.json();
+  console.log('Posts fetched:', data.length);
+  return data;
 };
 
 function PostsComponent() {
   const [showDetails, setShowDetails] = useState({});
-  const [selectedPostId, setSelectedPostId] = useState(null);
+  const [forceRefreshCount, setForceRefreshCount] = useState(0);
 
-  // Use React Query to fetch posts
+  // Use React Query to fetch posts with specific options
   const {
     data: posts,
     isLoading,
@@ -24,9 +27,13 @@ function PostsComponent() {
     refetch,
     isRefetching,
     isFetching,
+    dataUpdatedAt,
   } = useQuery({
     queryKey: ['posts'],
     queryFn: fetchPosts,
+    // These options demonstrate React Query features
+    refetchOnWindowFocus: true, // Refetch when window regains focus
+    keepPreviousData: true, // Keep previous data while fetching new data
   });
 
   // Function to toggle post details
@@ -35,12 +42,13 @@ function PostsComponent() {
       ...prev,
       [postId]: !prev[postId]
     }));
-    setSelectedPostId(postId);
   };
 
-  // Function to clear cache and refetch
+  // Function to handle refetch interaction
   const handleForceRefresh = () => {
+    console.log('Manual refetch triggered');
     refetch();
+    setForceRefreshCount(prev => prev + 1);
   };
 
   // Function to simulate navigation away and back
@@ -48,226 +56,627 @@ function PostsComponent() {
 
   if (!isComponentVisible) {
     return (
-      <div className="text-center p-8 bg-white rounded-xl shadow-lg">
-        <h2 className="text-2xl font-semibold text-gray-700 mb-4">
+      <div style={styles.hiddenContainer}>
+        <h2 style={styles.hiddenTitle}>
           Component Hidden (Simulating Navigation)
         </h2>
-        <p className="text-gray-600 mb-6">
-          The component is unmounted. Click the button below to remount it and observe caching behavior.
+        <p style={styles.hiddenText}>
+          The component is unmounted. React Query keeps the data in cache.
+          Click "Show Component" to see data loaded from cache (no loading spinner).
         </p>
         <button
           onClick={() => setIsComponentVisible(true)}
-          className="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-300"
+          style={styles.showButton}
         >
-          Show Posts Component
+          Show Component
         </button>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl p-6">
-      {/* Header with controls */}
-      <div className="mb-8">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-          <div>
-            <h2 className="text-2xl font-bold text-gray-800">
-              Posts from JSONPlaceholder API
-            </h2>
-            <p className="text-gray-600">
-              Demonstrating React Query's caching, loading states, and refetching
-            </p>
+    <div style={styles.container}>
+      {/* Header with cache info */}
+      <div style={styles.header}>
+        <div>
+          <h2 style={styles.title}>
+            Posts from JSONPlaceholder API
+          </h2>
+          <p style={styles.subtitle}>
+            Demonstrating React Query's advanced caching features
+          </p>
+        </div>
+        
+        {/* Cache information */}
+        <div style={styles.cacheInfo}>
+          <div style={styles.cacheInfoItem}>
+            <span style={styles.cacheLabel}>Cache Time:</span>
+            <span style={styles.cacheValue}>5 minutes</span>
           </div>
-          
-          <div className="flex flex-wrap gap-3">
+          <div style={styles.cacheInfoItem}>
+            <span style={styles.cacheLabel}>Stale Time:</span>
+            <span style={styles.cacheValue}>2 minutes</span>
+          </div>
+          <div style={styles.cacheInfoItem}>
+            <span style={styles.cacheLabel}>Last Updated:</span>
+            <span style={styles.cacheValue}>
+              {dataUpdatedAt ? new Date(dataUpdatedAt).toLocaleTimeString() : 'Never'}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* React Query configuration info */}
+      <div style={styles.configInfo}>
+        <h3 style={styles.configTitle}>React Query Configuration:</h3>
+        <div style={styles.configGrid}>
+          <div style={styles.configItem}>
+            <code style={styles.configCode}>cacheTime: 5 * 60 * 1000</code>
+            <p style={styles.configDesc}>Data stays in cache for 5 minutes</p>
+          </div>
+          <div style={styles.configItem}>
+            <code style={styles.configCode}>staleTime: 2 * 60 * 1000</code>
+            <p style={styles.configDesc}>Data considered fresh for 2 minutes</p>
+          </div>
+          <div style={styles.configItem}>
+            <code style={styles.configCode}>refetchOnWindowFocus: true</code>
+            <p style={styles.configDesc}>Refetches when window gains focus</p>
+          </div>
+          <div style={styles.configItem}>
+            <code style={styles.configCode}>keepPreviousData: true</code>
+            <p style={styles.configDesc}>Keeps old data during refetch</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Controls section */}
+      <div style={styles.controls}>
+        <div style={styles.controlGroup}>
+          <h3 style={styles.controlTitle}>Data Refetch Interaction:</h3>
+          <p style={styles.controlText}>
+            Click "Force Refresh" to manually refetch data. Observe how React Query
+            handles the refetch while keeping the UI responsive.
+          </p>
+          <div style={styles.buttonGroup}>
             <button
               onClick={handleForceRefresh}
               disabled={isRefetching}
-              className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-300 disabled:opacity-50"
+              style={isRefetching ? styles.refreshButtonDisabled : styles.refreshButton}
             >
-              {isRefetching ? 'Refreshing...' : 'Force Refresh'}
+              {isRefetching ? 'Refreshing...' : `Force Refresh (${forceRefreshCount})`}
             </button>
             
             <button
               onClick={() => setIsComponentVisible(false)}
-              className="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-300"
+              style={styles.hideButton}
             >
-              Hide Component
+              Hide Component to Test Cache
             </button>
           </div>
         </div>
 
         {/* Status indicators */}
-        <div className="flex flex-wrap gap-4 mb-6">
-          <div className="flex items-center">
-            <div className={`w-3 h-3 rounded-full mr-2 ${isFetching ? 'bg-yellow-500' : 'bg-green-500'}`}></div>
-            <span className="text-sm text-gray-600">
-              {isFetching ? 'Fetching data...' : 'Data ready'}
-            </span>
+        <div style={styles.status}>
+          <div style={styles.statusItem}>
+            <div style={{
+              ...styles.statusIndicator,
+              backgroundColor: isFetching ? '#f59e0b' : '#10b981'
+            }}></div>
+            <span>{isFetching ? 'Fetching...' : 'Ready'}</span>
           </div>
-          
-          <div className="flex items-center">
-            <div className={`w-3 h-3 rounded-full mr-2 ${isRefetching ? 'bg-yellow-500' : 'bg-gray-300'}`}></div>
-            <span className="text-sm text-gray-600">
-              {isRefetching ? 'Refetching...' : 'Not refetching'}
-            </span>
+          <div style={styles.statusItem}>
+            <div style={{
+              ...styles.statusIndicator,
+              backgroundColor: isRefetching ? '#f59e0b' : '#6b7280'
+            }}></div>
+            <span>{isRefetching ? 'Refetching...' : 'Idle'}</span>
+          </div>
+          <div style={styles.statusItem}>
+            <span>Refreshes: {forceRefreshCount}</span>
           </div>
         </div>
       </div>
 
       {/* Loading state */}
       {isLoading && (
-        <div className="text-center py-12">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
-          <p className="text-gray-600">Loading posts...</p>
+        <div style={styles.loadingContainer}>
+          <div style={styles.spinner}></div>
+          <p style={styles.loadingText}>Loading posts from API...</p>
+          <p style={styles.loadingSubtext}>
+            First load - fetching fresh data from server
+          </p>
         </div>
       )}
 
       {/* Error state */}
       {isError && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-          <h3 className="text-xl font-semibold text-red-700 mb-2">
+        <div style={styles.errorContainer}>
+          <h3 style={styles.errorTitle}>
             Error Loading Posts
           </h3>
-          <p className="text-red-600 mb-4">{error.message}</p>
+          <p style={styles.errorText}>{error.message}</p>
           <button
             onClick={() => refetch()}
-            className="px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition duration-300"
+            style={styles.retryButton}
           >
             Retry
           </button>
         </div>
       )}
 
-      {/* Success state - Display posts */}
+      {/* Data display */}
       {!isLoading && !isError && posts && (
         <>
-          <div className="mb-6 p-4 bg-blue-50 rounded-lg">
-            <h3 className="font-semibold text-blue-800 mb-2">
-              React Query Cache Behavior:
-            </h3>
-            <ul className="text-blue-700 text-sm space-y-1">
-              <li>• Data is automatically cached for 5 minutes</li>
-              <li>• Click "Hide Component" then "Show Posts" to see cache in action</li>
-              <li>• "Force Refresh" bypasses cache and fetches fresh data</li>
-              <li>• Background refetching is disabled for demonstration</li>
-            </ul>
-          </div>
-
-          <div className="mb-6">
-            <div className="flex justify-between items-center">
-              <h3 className="text-xl font-semibold text-gray-800">
-                Posts ({posts.length})
-              </h3>
-              <span className="text-sm text-gray-500">
-                Click on any post to view details
-              </span>
+          {/* Cache demonstration */}
+          <div style={styles.demoSection}>
+            <h3 style={styles.demoTitle}>Cache Demonstration:</h3>
+            <div style={styles.demoSteps}>
+              <div style={styles.demoStep}>
+                <span style={styles.stepNumber}>1</span>
+                <p>Click "Hide Component to Test Cache"</p>
+              </div>
+              <div style={styles.demoStep}>
+                <span style={styles.stepNumber}>2</span>
+                <p>Wait a few seconds</p>
+              </div>
+              <div style={styles.demoStep}>
+                <span style={styles.stepNumber}>3</span>
+                <p>Click "Show Component"</p>
+              </div>
+              <div style={styles.demoStep}>
+                <span style={styles.stepNumber}>4</span>
+                <p>Observe: Data loads instantly from cache (no loading spinner)</p>
+              </div>
             </div>
           </div>
 
-          {/* Posts grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {posts.slice(0, 12).map((post) => (
+          {/* Posts display */}
+          <div style={styles.postsHeader}>
+            <h3 style={styles.postsTitle}>
+              Posts ({posts.length})
+            </h3>
+            <p style={styles.postsInfo}>
+              Showing {Math.min(posts.length, 6)} posts. Data loaded from {isRefetching ? 'API (refetching)' : 'cache'}.
+            </p>
+          </div>
+
+          <div style={styles.postsGrid}>
+            {posts.slice(0, 6).map((post) => (
               <div
                 key={post.id}
-                className="border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow duration-300"
+                style={styles.postCard}
               >
-                <div className="p-5">
-                  <div className="flex items-start justify-between mb-3">
-                    <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">
-                      Post #{post.id}
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      User {post.userId}
-                    </span>
-                  </div>
-                  
-                  <h4 className="font-bold text-gray-800 mb-3 line-clamp-2">
-                    {post.title}
-                  </h4>
-                  
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                    {post.body}
-                  </p>
-                  
-                  <button
-                    onClick={() => togglePostDetails(post.id)}
-                    className="text-blue-600 hover:text-blue-800 font-medium text-sm flex items-center"
-                  >
-                    {showDetails[post.id] ? 'Hide Details' : 'View Details'}
-                    <svg 
-                      className={`ml-1 w-4 h-4 transition-transform ${showDetails[post.id] ? 'rotate-180' : ''}`}
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-                  
-                  {/* Detailed view */}
-                  {showDetails[post.id] && (
-                    <div className="mt-4 pt-4 border-t border-gray-100">
-                      <p className="text-gray-700 text-sm">{post.body}</p>
-                      <div className="mt-3 flex justify-between items-center text-xs text-gray-500">
-                        <span>Post ID: {post.id}</span>
-                        <span>User ID: {post.userId}</span>
-                      </div>
-                    </div>
-                  )}
+                <div style={styles.postHeader}>
+                  <span style={styles.postId}>Post #{post.id}</span>
+                  <span style={styles.postUser}>User {post.userId}</span>
                 </div>
+                <h4 style={styles.postTitle}>{post.title}</h4>
+                <p style={styles.postBody}>
+                  {showDetails[post.id] ? post.body : post.body.substring(0, 100) + '...'}
+                </p>
+                <button
+                  onClick={() => togglePostDetails(post.id)}
+                  style={styles.toggleButton}
+                >
+                  {showDetails[post.id] ? 'Show Less' : 'Show More'}
+                </button>
               </div>
             ))}
           </div>
 
-          {/* Cache demonstration info */}
-          <div className="mt-8 p-6 bg-gray-50 rounded-xl">
-            <h3 className="font-semibold text-gray-800 mb-3">
-              Cache Demonstration Instructions:
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-white p-4 rounded-lg border border-gray-200">
-                <h4 className="font-medium text-gray-700 mb-2">1. Observe Caching:</h4>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• Click "Hide Component" button</li>
-                  <li>• Wait a few seconds</li>
-                  <li>• Click "Show Posts Component"</li>
-                  <li>• Note: No loading spinner appears (data from cache)</li>
-                </ul>
-              </div>
-              <div className="bg-white p-4 rounded-lg border border-gray-200">
-                <h4 className="font-medium text-gray-700 mb-2">2. Observe Refetching:</h4>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• Click "Force Refresh" button</li>
-                  <li>• Loading spinner appears briefly</li>
-                  <li>• Fresh data is fetched from API</li>
-                  <li>• Cache is updated with new data</li>
-                </ul>
-              </div>
+          {/* Refetch demonstration */}
+          <div style={styles.refetchDemo}>
+            <h3 style={styles.refetchTitle}>Refetch Interaction Test:</h3>
+            <div style={styles.refetchInstructions}>
+              <p>1. Click "Force Refresh" button above</p>
+              <p>2. Observe the status indicator changes to "Refetching..."</p>
+              <p>3. Notice the UI stays responsive during refetch</p>
+              <p>4. Data updates automatically when refetch completes</p>
             </div>
           </div>
         </>
       )}
 
-      {/* Footer */}
-      <div className="mt-8 pt-6 border-t border-gray-200 text-center text-sm text-gray-500">
-        <p>
-          This demo uses React Query to manage data fetching, caching, and state.
-          Check the React Query DevTools (bottom-right) to inspect cache behavior.
+      {/* Footer with React Query info */}
+      <div style={styles.footer}>
+        <p style={styles.footerText}>
+          This demonstrates React Query's advanced features:
         </p>
-        <p className="mt-2">
-          API: <a 
+        <ul style={styles.featureList}>
+          <li><strong>cacheTime</strong>: How long unused data stays in cache</li>
+          <li><strong>staleTime</strong>: How long data is considered fresh</li>
+          <li><strong>refetchOnWindowFocus</strong>: Auto-refetch on window focus</li>
+          <li><strong>keepPreviousData</strong>: Show old data during refetch</li>
+          <li><strong>Data Refetch Interaction</strong>: Manual refresh triggers</li>
+        </ul>
+        <p style={styles.apiInfo}>
+          API Source: <a 
             href="https://jsonplaceholder.typicode.com/posts" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="text-blue-600 hover:underline"
+            style={styles.link}
           >
-            https://jsonplaceholder.typicode.com/posts
+            jsonplaceholder.typicode.com/posts
           </a>
         </p>
       </div>
     </div>
   );
 }
+
+// Inline styles
+const styles = {
+  container: {
+    backgroundColor: 'white',
+    borderRadius: '1rem',
+    boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)',
+    padding: '2rem',
+  },
+  header: {
+    marginBottom: '2rem',
+    paddingBottom: '1.5rem',
+    borderBottom: '1px solid #e5e7eb',
+  },
+  title: {
+    fontSize: '1.875rem',
+    fontWeight: 'bold',
+    color: '#1f2937',
+    marginBottom: '0.5rem',
+  },
+  subtitle: {
+    fontSize: '1.125rem',
+    color: '#6b7280',
+  },
+  cacheInfo: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '1.5rem',
+    marginTop: '1rem',
+    padding: '1rem',
+    backgroundColor: '#f3f4f6',
+    borderRadius: '0.5rem',
+  },
+  cacheInfoItem: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  cacheLabel: {
+    fontSize: '0.875rem',
+    color: '#6b7280',
+    fontWeight: '500',
+  },
+  cacheValue: {
+    fontSize: '1rem',
+    color: '#1f2937',
+    fontWeight: '600',
+  },
+  configInfo: {
+    marginBottom: '2rem',
+    padding: '1.5rem',
+    backgroundColor: '#f0f9ff',
+    borderRadius: '0.75rem',
+  },
+  configTitle: {
+    fontSize: '1.25rem',
+    fontWeight: '600',
+    color: '#0369a1',
+    marginBottom: '1rem',
+  },
+  configGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+    gap: '1rem',
+  },
+  configItem: {
+    padding: '1rem',
+    backgroundColor: 'white',
+    borderRadius: '0.5rem',
+    border: '1px solid #bae6fd',
+  },
+  configCode: {
+    display: 'block',
+    fontFamily: 'monospace',
+    backgroundColor: '#0c4a6e',
+    color: 'white',
+    padding: '0.5rem',
+    borderRadius: '0.25rem',
+    marginBottom: '0.5rem',
+  },
+  configDesc: {
+    fontSize: '0.875rem',
+    color: '#475569',
+    margin: 0,
+  },
+  controls: {
+    marginBottom: '2rem',
+    padding: '1.5rem',
+    backgroundColor: '#f8fafc',
+    borderRadius: '0.75rem',
+  },
+  controlGroup: {
+    marginBottom: '1rem',
+  },
+  controlTitle: {
+    fontSize: '1.25rem',
+    fontWeight: '600',
+    color: '#1f2937',
+    marginBottom: '0.5rem',
+  },
+  controlText: {
+    color: '#6b7280',
+    marginBottom: '1rem',
+  },
+  buttonGroup: {
+    display: 'flex',
+    gap: '1rem',
+    flexWrap: 'wrap',
+  },
+  refreshButton: {
+    padding: '0.75rem 1.5rem',
+    backgroundColor: '#3b82f6',
+    color: 'white',
+    fontWeight: '600',
+    borderRadius: '0.5rem',
+    border: 'none',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s',
+  },
+  refreshButtonDisabled: {
+    padding: '0.75rem 1.5rem',
+    backgroundColor: '#3b82f6',
+    color: 'white',
+    fontWeight: '600',
+    borderRadius: '0.5rem',
+    border: 'none',
+    cursor: 'not-allowed',
+    opacity: 0.7,
+  },
+  hideButton: {
+    padding: '0.75rem 1.5rem',
+    backgroundColor: '#6b7280',
+    color: 'white',
+    fontWeight: '600',
+    borderRadius: '0.5rem',
+    border: 'none',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s',
+  },
+  showButton: {
+    padding: '0.75rem 1.5rem',
+    backgroundColor: '#10b981',
+    color: 'white',
+    fontWeight: '600',
+    borderRadius: '0.5rem',
+    border: 'none',
+    cursor: 'pointer',
+    marginTop: '1rem',
+  },
+  status: {
+    display: 'flex',
+    gap: '2rem',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+  },
+  statusItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    color: '#6b7280',
+  },
+  statusIndicator: {
+    width: '0.75rem',
+    height: '0.75rem',
+    borderRadius: '50%',
+  },
+  loadingContainer: {
+    textAlign: 'center',
+    padding: '3rem 0',
+  },
+  spinner: {
+    display: 'inline-block',
+    width: '3rem',
+    height: '3rem',
+    border: '3px solid #e5e7eb',
+    borderTopColor: '#3b82f6',
+    borderRadius: '50%',
+    animation: 'spin 1s linear infinite',
+    marginBottom: '1rem',
+  },
+  loadingText: {
+    fontSize: '1.125rem',
+    color: '#1f2937',
+    fontWeight: '500',
+  },
+  loadingSubtext: {
+    color: '#6b7280',
+    marginTop: '0.5rem',
+  },
+  errorContainer: {
+    backgroundColor: '#fef2f2',
+    border: '1px solid #fecaca',
+    borderRadius: '0.75rem',
+    padding: '1.5rem',
+    textAlign: 'center',
+  },
+  errorTitle: {
+    fontSize: '1.25rem',
+    fontWeight: '600',
+    color: '#dc2626',
+    marginBottom: '0.5rem',
+  },
+  errorText: {
+    color: '#dc2626',
+    marginBottom: '1rem',
+  },
+  retryButton: {
+    padding: '0.5rem 1.5rem',
+    backgroundColor: '#dc2626',
+    color: 'white',
+    fontWeight: '600',
+    borderRadius: '0.5rem',
+    border: 'none',
+    cursor: 'pointer',
+  },
+  demoSection: {
+    marginBottom: '2rem',
+    padding: '1.5rem',
+    backgroundColor: '#fef3c7',
+    borderRadius: '0.75rem',
+  },
+  demoTitle: {
+    fontSize: '1.25rem',
+    fontWeight: '600',
+    color: '#92400e',
+    marginBottom: '1rem',
+  },
+  demoSteps: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+    gap: '1rem',
+  },
+  demoStep: {
+    padding: '1rem',
+    backgroundColor: 'white',
+    borderRadius: '0.5rem',
+    textAlign: 'center',
+  },
+  stepNumber: {
+    display: 'inline-block',
+    width: '2rem',
+    height: '2rem',
+    backgroundColor: '#f59e0b',
+    color: 'white',
+    borderRadius: '50%',
+    lineHeight: '2rem',
+    marginBottom: '0.5rem',
+    fontWeight: 'bold',
+  },
+  postsHeader: {
+    marginBottom: '1.5rem',
+  },
+  postsTitle: {
+    fontSize: '1.5rem',
+    fontWeight: 'bold',
+    color: '#1f2937',
+    marginBottom: '0.5rem',
+  },
+  postsInfo: {
+    color: '#6b7280',
+  },
+  postsGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+    gap: '1.5rem',
+    marginBottom: '2rem',
+  },
+  postCard: {
+    border: '1px solid #e5e7eb',
+    borderRadius: '0.75rem',
+    padding: '1.5rem',
+    transition: 'box-shadow 0.2s',
+  },
+  postHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '1rem',
+  },
+  postId: {
+    backgroundColor: '#dbeafe',
+    color: '#1e40af',
+    padding: '0.25rem 0.75rem',
+    borderRadius: '9999px',
+    fontSize: '0.875rem',
+    fontWeight: '600',
+  },
+  postUser: {
+    color: '#6b7280',
+    fontSize: '0.875rem',
+  },
+  postTitle: {
+    fontSize: '1.125rem',
+    fontWeight: '600',
+    color: '#1f2937',
+    marginBottom: '1rem',
+  },
+  postBody: {
+    color: '#6b7280',
+    lineHeight: '1.6',
+    marginBottom: '1rem',
+  },
+  toggleButton: {
+    color: '#3b82f6',
+    backgroundColor: 'transparent',
+    border: 'none',
+    cursor: 'pointer',
+    fontWeight: '500',
+    padding: 0,
+  },
+  refetchDemo: {
+    marginBottom: '2rem',
+    padding: '1.5rem',
+    backgroundColor: '#ecfdf5',
+    borderRadius: '0.75rem',
+  },
+  refetchTitle: {
+    fontSize: '1.25rem',
+    fontWeight: '600',
+    color: '#065f46',
+    marginBottom: '1rem',
+  },
+  refetchInstructions: {
+    color: '#065f46',
+  },
+  footer: {
+    marginTop: '2rem',
+    paddingTop: '1.5rem',
+    borderTop: '1px solid #e5e7eb',
+  },
+  footerText: {
+    fontSize: '1.125rem',
+    fontWeight: '500',
+    color: '#1f2937',
+    marginBottom: '1rem',
+  },
+  featureList: {
+    color: '#6b7280',
+    marginLeft: '1.5rem',
+    marginBottom: '1rem',
+  },
+  apiInfo: {
+    color: '#6b7280',
+    fontSize: '0.875rem',
+  },
+  link: {
+    color: '#3b82f6',
+    textDecoration: 'none',
+  },
+  hiddenContainer: {
+    textAlign: 'center',
+    padding: '3rem',
+    backgroundColor: 'white',
+    borderRadius: '1rem',
+    boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)',
+  },
+  hiddenTitle: {
+    fontSize: '1.5rem',
+    fontWeight: 'bold',
+    color: '#1f2937',
+    marginBottom: '1rem',
+  },
+  hiddenText: {
+    color: '#6b7280',
+    marginBottom: '1.5rem',
+  },
+};
+
+// Add keyframes for spinner animation
+const styleSheet = document.styleSheets[0];
+styleSheet.insertRule(`
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+`, styleSheet.cssRules.length);
 
 export default PostsComponent;
