@@ -1,5 +1,5 @@
 // src/components/Blog.jsx
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const categories = [
   { id: 'tech', name: 'Technology', postCount: 5 },
@@ -20,15 +20,15 @@ function Blog() {
     <div style={styles.container}>
       <h1 style={styles.title}>Blog</h1>
       <p style={styles.subtitle}>
-        Dynamic routing example with URL parameters
+        Dynamic routing demonstration with URL parameters
       </p>
       
       <div style={styles.explanation}>
-        <h3 style={styles.explanationTitle}>Dynamic Routing Demonstration:</h3>
+        <h3 style={styles.explanationTitle}>Dynamic Routing with "/blog/:id" Pattern:</h3>
         <p style={styles.explanationText}>
-          This page demonstrates dynamic routing using URL parameters. 
-          Click on a post to see dynamic routing in action with <code>:postId</code> parameter.
-          Click on a category to see dynamic routing with <code>:categoryId</code> parameter.
+          This section demonstrates dynamic routing using the <code>/blog/:id</code> pattern.
+          Click on any post below to navigate to a dynamic route where the ID is extracted from the URL.
+          The same <code>BlogPost</code> component handles all posts, displaying different content based on the ID parameter.
         </p>
       </div>
       
@@ -47,19 +47,37 @@ function Blog() {
         </div>
         
         <div style={styles.content}>
-          <h3 style={styles.postsTitle}>Latest Posts</h3>
+          <h3 style={styles.postsTitle}>Latest Posts (Dynamic Routes)</h3>
+          <p style={styles.postsSubtitle}>
+            Each post links to a dynamic route using the <code>/blog/:id</code> pattern
+          </p>
           <div style={styles.postsList}>
             {posts.map(post => (
               <div key={post.id} style={styles.postItem}>
                 <h4 style={styles.postTitle}>{post.title}</h4>
                 <div style={styles.postMeta}>
                   <span style={styles.postCategory}>{post.category}</span>
-                  <Link to={`/blog/post/${post.id}`} style={styles.readMore}>
-                    Read More →
+                  {/* This link uses the /blog/:id pattern */}
+                  <Link to={`/blog/${post.id}`} style={styles.readMore}>
+                    Read Post (ID: {post.id}) →
                   </Link>
                 </div>
+                <p style={styles.postDescription}>
+                  This post uses the dynamic route: <code>/blog/{post.id}</code>
+                </p>
               </div>
             ))}
+          </div>
+          
+          <div style={styles.testInstructions}>
+            <h4>Test Dynamic Routing:</h4>
+            <p>Try navigating to these URLs manually:</p>
+            <ul style={styles.urlList}>
+              <li><code>/blog/1</code> - First blog post</li>
+              <li><code>/blog/2</code> - Second blog post</li>
+              <li><code>/blog/3</code> - Third blog post</li>
+              <li><code>/blog/999</code> - Non-existent post (shows error)</li>
+            </ul>
           </div>
         </div>
       </div>
@@ -89,6 +107,7 @@ const styles = {
     padding: '1.5rem',
     borderRadius: '0.75rem',
     marginBottom: '2rem',
+    border: '1px solid #bae6fd',
   },
   explanationTitle: {
     fontSize: '1.125rem',
@@ -130,27 +149,35 @@ const styles = {
     fontSize: '1.5rem',
     fontWeight: '600',
     color: '#1f2937',
-    marginBottom: '1rem',
+    marginBottom: '0.5rem',
+  },
+  postsSubtitle: {
+    color: '#6b7280',
+    marginBottom: '1.5rem',
+    fontSize: '0.875rem',
   },
   postsList: {
     display: 'grid',
     gap: '1rem',
+    marginBottom: '2rem',
   },
   postItem: {
-    padding: '1rem',
+    padding: '1.5rem',
     backgroundColor: '#f9fafb',
-    borderRadius: '0.5rem',
+    borderRadius: '0.75rem',
+    border: '1px solid #e5e7eb',
   },
   postTitle: {
     fontSize: '1.125rem',
     fontWeight: '500',
     color: '#1f2937',
-    marginBottom: '0.5rem',
+    marginBottom: '0.75rem',
   },
   postMeta: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: '0.75rem',
   },
   postCategory: {
     backgroundColor: '#dbeafe',
@@ -164,6 +191,24 @@ const styles = {
     color: '#3b82f6',
     textDecoration: 'none',
     fontSize: '0.875rem',
+    fontWeight: '500',
+  },
+  postDescription: {
+    color: '#6b7280',
+    fontSize: '0.875rem',
+    fontStyle: 'italic',
+    marginTop: '0.5rem',
+  },
+  testInstructions: {
+    backgroundColor: '#fef3c7',
+    padding: '1.5rem',
+    borderRadius: '0.75rem',
+    border: '1px solid #fde68a',
+  },
+  urlList: {
+    color: '#92400e',
+    marginTop: '0.5rem',
+    paddingLeft: '1.5rem',
   },
 };
 
