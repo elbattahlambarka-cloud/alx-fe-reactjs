@@ -1,12 +1,14 @@
 // src/components/Login.jsx
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
 function Login({ onLogin }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
+  const { login } = useAuth();
 
   // Get the location they tried to access before redirect
   const from = location.state?.from?.pathname || '/';
@@ -16,7 +18,10 @@ function Login({ onLogin }) {
     
     // Simple authentication simulation
     if (username && password) {
-      onLogin(username);
+      // Use the login function from useAuth hook
+      login(username);
+      // Call the onLogin prop if provided (for backward compatibility)
+      if (onLogin) onLogin(username);
       // Redirect to the page they tried to access, or home
       navigate(from, { replace: true });
     } else {
@@ -67,6 +72,12 @@ function Login({ onLogin }) {
             Login
           </button>
         </form>
+        
+        <div style={styles.authInfo}>
+          <h4>Authentication System:</h4>
+          <p>This app uses a custom <code>useAuth</code> hook for authentication.</p>
+          <p>The <code>ProtectedRoute</code> component uses <code>useAuth()</code> to check authentication status.</p>
+        </div>
         
         <div style={styles.demoNote}>
           <p style={styles.noteText}>
@@ -136,6 +147,13 @@ const styles = {
     fontWeight: '600',
     cursor: 'pointer',
     transition: 'background-color 0.2s',
+  },
+  authInfo: {
+    backgroundColor: '#f0f9ff',
+    padding: '1rem',
+    borderRadius: '0.5rem',
+    marginBottom: '1rem',
+    border: '1px solid #bae6fd',
   },
   demoNote: {
     backgroundColor: '#fef3c7',

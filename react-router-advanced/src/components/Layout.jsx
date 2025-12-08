@@ -1,11 +1,19 @@
 // src/components/Layout.jsx
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
-function Layout({ isAuthenticated, onLogout }) {
+function Layout({ isAuthenticated: propIsAuthenticated, onLogout: propOnLogout }) {
   const navigate = useNavigate();
+  const { isAuthenticated: hookIsAuthenticated, logout: hookLogout, user } = useAuth();
+  
+  // Use hook values if available, otherwise use props (for backward compatibility)
+  const isAuthenticated = hookIsAuthenticated !== undefined ? hookIsAuthenticated : propIsAuthenticated;
+  const logout = hookLogout || propOnLogout;
 
   const handleLogout = () => {
-    onLogout();
+    if (logout) {
+      logout();
+    }
     navigate('/');
   };
 
@@ -71,9 +79,12 @@ function Layout({ isAuthenticated, onLogout }) {
                   Profile
                 </NavLink>
                 
-                <button onClick={handleLogout} style={styles.logoutButton}>
-                  Logout
-                </button>
+                <div style={styles.userInfo}>
+                  <span style={styles.username}>Hi, {user?.username}</span>
+                  <button onClick={handleLogout} style={styles.logoutButton}>
+                    Logout
+                  </button>
+                </div>
               </>
             ) : (
               <NavLink 
@@ -98,12 +109,15 @@ function Layout({ isAuthenticated, onLogout }) {
       {/* Footer */}
       <footer style={styles.footer}>
         <div style={styles.footerContent}>
-          <p style={styles.footerText}>Advanced React Router Demo</p>
+          <p style={styles.footerText}>Advanced React Router Demo with Protected Routes</p>
           <div style={styles.footerLinks}>
             <Link to="/" style={styles.footerLink}>Home</Link>
             <Link to="/blog" style={styles.footerLink}>Blog</Link>
             <Link to="/products" style={styles.footerLink}>Products</Link>
           </div>
+          <p style={styles.authStatus}>
+            Authentication System: Custom <code>useAuth</code> hook with localStorage persistence
+          </p>
         </div>
       </footer>
     </div>
@@ -152,6 +166,15 @@ const styles = {
     color: 'white',
     fontWeight: '600',
   },
+  userInfo: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '1rem',
+  },
+  username: {
+    color: '#d1d5db',
+    fontSize: '0.875rem',
+  },
   logoutButton: {
     backgroundColor: '#ef4444',
     color: 'white',
@@ -189,11 +212,17 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     gap: '2rem',
+    marginBottom: '1rem',
   },
   footerLink: {
     color: '#d1d5db',
     textDecoration: 'none',
     transition: 'color 0.2s',
+  },
+  authStatus: {
+    fontSize: '0.875rem',
+    color: '#9ca3af',
+    marginTop: '1rem',
   },
 };
 

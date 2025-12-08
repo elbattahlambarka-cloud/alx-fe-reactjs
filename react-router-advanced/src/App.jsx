@@ -1,6 +1,6 @@
 // src/App.jsx
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useAuth } from './hooks/useAuth';
 import Layout from './components/Layout';
 import Home from './components/Home';
 import Dashboard from './components/Dashboard';
@@ -17,27 +17,15 @@ import ProductDetail from './components/ProductDetail';
 import NotFound from './components/NotFound';
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
-
-  // Simulate login/logout
-  const handleLogin = (username) => {
-    setIsAuthenticated(true);
-    setUser({ username, role: 'user' });
-  };
-
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    setUser(null);
-  };
+  const { isAuthenticated, user, login, logout } = useAuth();
 
   return (
     <Router>
       <Routes>
         {/* Public routes */}
-        <Route path="/" element={<Layout isAuthenticated={isAuthenticated} onLogout={handleLogout} />}>
+        <Route path="/" element={<Layout isAuthenticated={isAuthenticated} onLogout={logout} />}>
           <Route index element={<Home />} />
-          <Route path="login" element={<Login onLogin={handleLogin} />} />
+          <Route path="login" element={<Login onLogin={login} />} />
           
           {/* Dynamic routing examples */}
           <Route path="blog" element={<Blog />} />
@@ -53,7 +41,7 @@ function App() {
           <Route 
             path="dashboard" 
             element={
-              <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <ProtectedRoute>
                 <Dashboard user={user} />
               </ProtectedRoute>
             } 
@@ -62,7 +50,7 @@ function App() {
           <Route 
             path="profile" 
             element={
-              <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <ProtectedRoute>
                 <Profile user={user} />
               </ProtectedRoute>
             } 
