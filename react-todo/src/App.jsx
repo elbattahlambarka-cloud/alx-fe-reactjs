@@ -1,20 +1,13 @@
-// src/App.jsx
+import React from 'react';
 import TodoList from './components/TodoList';
+import './App.css';
 
 function App() {
   return (
-    <div style={styles.container}>
+    <div className="App">
       <TodoList />
     </div>
   );
 }
-
-const styles = {
-  container: {
-    minHeight: '100vh',
-    backgroundColor: '#e5e7eb',
-    padding: '2rem',
-  },
-};
 
 export default App;
