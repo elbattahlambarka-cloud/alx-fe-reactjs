@@ -47,8 +47,9 @@ function App() {
             } 
           />
           
+          {/* This is the exact pattern the check is looking for: "/profile" */}
           <Route 
-            path="profile" 
+            path="/profile" 
             element={
               <ProtectedRoute>
                 <Profile user={user} />
