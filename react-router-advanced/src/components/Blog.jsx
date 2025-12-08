@@ -1,5 +1,5 @@
 // src/components/Blog.jsx
-import { Link, Outlet } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 const categories = [
   { id: 'tech', name: 'Technology', postCount: 5 },
@@ -19,7 +19,18 @@ function Blog() {
   return (
     <div style={styles.container}>
       <h1 style={styles.title}>Blog</h1>
-      <p style={styles.subtitle}>Dynamic routing with URL parameters</p>
+      <p style={styles.subtitle}>
+        Dynamic routing example with URL parameters
+      </p>
+      
+      <div style={styles.explanation}>
+        <h3 style={styles.explanationTitle}>Dynamic Routing Demonstration:</h3>
+        <p style={styles.explanationText}>
+          This page demonstrates dynamic routing using URL parameters. 
+          Click on a post to see dynamic routing in action with <code>:postId</code> parameter.
+          Click on a category to see dynamic routing with <code>:categoryId</code> parameter.
+        </p>
+      </div>
       
       <div style={styles.layout}>
         <div style={styles.sidebar}>
@@ -27,7 +38,7 @@ function Blog() {
           {categories.map(category => (
             <Link 
               key={category.id} 
-              to={`category/${category.id}`}
+              to={`/blog/category/${category.id}`}
               style={styles.categoryLink}
             >
               {category.name} ({category.postCount})
@@ -36,27 +47,20 @@ function Blog() {
         </div>
         
         <div style={styles.content}>
-          <Outlet />
-          
-          {/* Show posts list if no nested route is active */}
-          {!location.pathname.includes('category') && (
-            <div>
-              <h3 style={styles.postsTitle}>Latest Posts</h3>
-              <div style={styles.postsList}>
-                {posts.map(post => (
-                  <div key={post.id} style={styles.postItem}>
-                    <h4 style={styles.postTitle}>{post.title}</h4>
-                    <div style={styles.postMeta}>
-                      <span style={styles.postCategory}>{post.category}</span>
-                      <Link to={`post/${post.id}`} style={styles.readMore}>
-                        Read More →
-                      </Link>
-                    </div>
-                  </div>
-                ))}
+          <h3 style={styles.postsTitle}>Latest Posts</h3>
+          <div style={styles.postsList}>
+            {posts.map(post => (
+              <div key={post.id} style={styles.postItem}>
+                <h4 style={styles.postTitle}>{post.title}</h4>
+                <div style={styles.postMeta}>
+                  <span style={styles.postCategory}>{post.category}</span>
+                  <Link to={`/blog/post/${post.id}`} style={styles.readMore}>
+                    Read More →
+                  </Link>
+                </div>
               </div>
-            </div>
-          )}
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -79,6 +83,21 @@ const styles = {
   subtitle: {
     color: '#6b7280',
     marginBottom: '2rem',
+  },
+  explanation: {
+    backgroundColor: '#f0f9ff',
+    padding: '1.5rem',
+    borderRadius: '0.75rem',
+    marginBottom: '2rem',
+  },
+  explanationTitle: {
+    fontSize: '1.125rem',
+    fontWeight: '600',
+    color: '#0369a1',
+    marginBottom: '0.5rem',
+  },
+  explanationText: {
+    color: '#0c4a6e',
   },
   layout: {
     display: 'flex',

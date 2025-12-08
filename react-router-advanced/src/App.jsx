@@ -38,10 +38,13 @@ function App() {
         <Route path="/" element={<Layout isAuthenticated={isAuthenticated} onLogout={handleLogout} />}>
           <Route index element={<Home />} />
           <Route path="login" element={<Login onLogin={handleLogin} />} />
-          <Route path="blog" element={<Blog />}>
-            <Route path="category/:categoryId" element={<BlogCategory />} />
-          </Route>
+          
+          {/* Blog with dynamic routing */}
+          <Route path="blog" element={<Blog />} />
+          <Route path="blog/category/:categoryId" element={<BlogCategory />} />
           <Route path="blog/post/:postId" element={<BlogPost />} />
+          
+          {/* Products with dynamic routing */}
           <Route path="products" element={<Products />} />
           <Route path="products/:productId" element={<ProductDetail />} />
           
@@ -52,15 +55,12 @@ function App() {
             </ProtectedRoute>
           } />
           
+          {/* Profile with nested routes */}
           <Route path="profile" element={
             <ProtectedRoute isAuthenticated={isAuthenticated}>
               <Profile user={user} />
             </ProtectedRoute>
-          }>
-            <Route index element={<Navigate to="details" replace />} />
-            <Route path="details" element={<ProfileDetails user={user} />} />
-            <Route path="settings" element={<ProfileSettings user={user} />} />
-          </Route>
+          } />
           
           {/* 404 route */}
           <Route path="*" element={<NotFound />} />

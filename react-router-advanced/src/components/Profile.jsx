@@ -1,5 +1,7 @@
 // src/components/Profile.jsx
-import { NavLink, Outlet } from 'react-router-dom';
+import { Routes, Route, NavLink, Outlet } from 'react-router-dom';
+import ProfileDetails from './ProfileDetails';
+import ProfileSettings from './ProfileSettings';
 
 function Profile({ user }) {
   return (
@@ -35,7 +37,11 @@ function Profile({ user }) {
         
         {/* Nested route content */}
         <div style={styles.content}>
-          <Outlet />
+          {/* Nested routes using Routes and Route components */}
+          <Routes>
+            <Route path="details" element={<ProfileDetails user={user} />} />
+            <Route path="settings" element={<ProfileSettings user={user} />} />
+          </Routes>
         </div>
       </div>
     </div>
