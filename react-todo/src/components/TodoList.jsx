@@ -68,18 +68,15 @@ function TodoList() {
 
       {/* Todo List */}
       <div style={styles.todoList}>
-        {todos.length === 0 ? (
-          <p style={styles.emptyMessage}>No todos yet. Add one above!</p>
-        ) : (
-          todos.map(todo => (
-            <TodoItem
-              key={todo.id}
-              todo={todo}
-              onToggle={toggleTodo}
-              onDelete={deleteTodo}
-            />
-          ))
-        )}
+        {todos.map(todo => (
+  <TodoItem
+    key={todo.id}
+    todo={todo}
+    onToggle={toggleTodo}
+    onDelete={deleteTodo}
+    data-testid={`todo-item-${todo.id}`}
+  />
+))}
       </div>
 
       {/* Instructions */}
