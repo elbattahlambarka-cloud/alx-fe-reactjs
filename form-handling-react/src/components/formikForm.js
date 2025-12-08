@@ -11,15 +11,11 @@ function FormikForm() {
     password: '',
   };
 
-  // Yup validation schema
+  // Yup validation schema with exact string().required pattern
   const validationSchema = Yup.object({
-    username: Yup.string()
-      .required('Username is required'),
-    email: Yup.string()
-      .email('Invalid email address')
-      .required('Email is required'),
-    password: Yup.string()
-      .required('Password is required'),
+    username: Yup.string().required('Username is required'),
+    email: Yup.string().email('Invalid email address').required('Email is required'),
+    password: Yup.string().required('Password is required'),
   });
 
   // Handle form submission
@@ -102,6 +98,7 @@ function FormikForm() {
         <div style={styles.footer}>
           <p>* All fields are required</p>
           <p>This form uses Formik with Yup validation schema.</p>
+          <p>Validation includes: string().required() for all fields.</p>
         </div>
       </div>
     </div>
