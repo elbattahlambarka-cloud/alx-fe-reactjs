@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 const TodoList = () => {
+  // Initialize the component state with a few todos for demonstration
   const [todos, setTodos] = useState([
     { id: 1, text: 'Learn React', completed: false },
     { id: 2, text: 'Build Todo App', completed: true },
@@ -9,6 +10,7 @@ const TodoList = () => {
   
   const [inputValue, setInputValue] = useState('');
 
+  // Method for adding todos
   const addTodo = (e) => {
     e.preventDefault();
     if (!inputValue.trim()) return;
@@ -23,12 +25,14 @@ const TodoList = () => {
     setInputValue('');
   };
 
+  // Method for toggling todos
   const toggleTodo = (id) => {
     setTodos(todos.map(todo => 
       todo.id === id ? { ...todo, completed: !todo.completed } : todo
     ));
   };
 
+  // Method for deleting todos
   const deleteTodo = (id) => {
     setTodos(todos.filter(todo => todo.id !== id));
   };
