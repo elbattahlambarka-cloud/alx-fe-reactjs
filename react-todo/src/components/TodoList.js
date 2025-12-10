@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const TodoList = () => {
-  // Initial state with demo todos
+  // Initialize component state with a few todos for demonstration
   const [todos, setTodos] = useState([
     { id: 1, text: 'Learn React', completed: false },
     { id: 2, text: 'Build Todo App', completed: true },
@@ -10,7 +10,7 @@ const TodoList = () => {
   
   const [inputValue, setInputValue] = useState('');
 
-  // Method to add new todo
+  // Method for adding todos
   const addTodo = (e) => {
     e.preventDefault();
     if (inputValue.trim() === '') return;
@@ -25,29 +25,24 @@ const TodoList = () => {
     setInputValue('');
   };
 
-  // Method to toggle todo completion
+  // Method for toggling todos
   const toggleTodo = (id) => {
-    const updatedTodos = todos.map(todo => {
-      if (todo.id === id) {
-        return { ...todo, completed: !todo.completed };
-      }
-      return todo;
-    });
-    setTodos(updatedTodos);
+    setTodos(todos.map(todo => 
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    ));
   };
 
-  // Method to delete todo
+  // Method for deleting todos
   const deleteTodo = (id) => {
-    const filteredTodos = todos.filter(todo => todo.id !== id);
-    setTodos(filteredTodos);
+    setTodos(todos.filter(todo => todo.id !== id));
   };
 
   return (
-    <div className="todo-list">
+    <div>
       <h1>Todo List</h1>
       
       {/* AddTodoForm */}
-      <form onSubmit={addTodo} className="add-todo-form">
+      <form onSubmit={addTodo}>
         <input
           type="text"
           value={inputValue}
@@ -63,12 +58,11 @@ const TodoList = () => {
         </button>
       </form>
       
-      {/* Todo List */}
+      {/* Display list of todos */}
       <ul data-testid="todo-list">
         {todos.map(todo => (
           <li 
             key={todo.id}
-            className={todo.completed ? 'completed' : ''}
             data-testid={`todo-item-${todo.id}`}
           >
             <span
@@ -84,7 +78,6 @@ const TodoList = () => {
             <button
               onClick={() => deleteTodo(todo.id)}
               data-testid={`delete-button-${todo.id}`}
-              className="delete-btn"
             >
               Delete
             </button>
