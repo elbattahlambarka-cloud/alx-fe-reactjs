@@ -10,7 +10,7 @@ const TodoList = () => {
     { id: 3, text: 'Write Tests', completed: false },
   ]);
 
-  // Include methods for adding, toggling, and deleting todos
+  // Method for adding todos
   const addTodo = (text) => {
     const newTodo = {
       id: Date.now(),
@@ -20,6 +20,7 @@ const TodoList = () => {
     setTodos([...todos, newTodo]);
   };
 
+  // Method for toggling todos
   const toggleTodo = (id) => {
     setTodos(
       todos.map((todo) =>
@@ -28,6 +29,7 @@ const TodoList = () => {
     );
   };
 
+  // Method for deleting todos
   const deleteTodo = (id) => {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
