@@ -6,75 +6,94 @@ import TodoList from '../components/TodoList';
 // Test suite for TodoList component
 describe('TodoList Component', () => {
   
-  // Test 1: Initial render with demo todos
   test('renders initial todo items correctly', () => {
     render(<TodoList />);
     
-    // Check initial todos are rendered
+    // Verify that the TodoList component renders correctly
+    expect(screen.getByText('Todo List')).toBeInTheDocument();
+    
+    // Ensure that the initial state (a few demo todos) is rendered
     expect(screen.getByText('Learn React')).toBeInTheDocument();
     expect(screen.getByText('Build Todo App')).toBeInTheDocument();
     expect(screen.getByText('Write Tests')).toBeInTheDocument();
     
-    // Check that Build Todo App is completed (has line-through)
+    // Check that "Build Todo App" is completed
     const completedTodo = screen.getByText('Build Todo App');
     expect(completedTodo).toHaveStyle('text-decoration: line-through');
   });
 
-  // Test 2: Adding a new todo
   test('adds a new todo when form is submitted', () => {
     render(<TodoList />);
     
+    // Get input and button
     const input = screen.getByTestId('todo-input');
-    const addButton = screen.getByTestId('add-button');
+    const button = screen.getByTestId('add-button');
     
-    // Add new todo
+    // Use fireEvent to simulate user input and form submission
     fireEvent.change(input, { target: { value: 'New Test Todo' } });
-    fireEvent.click(addButton);
+    fireEvent.click(button);
     
-    // Check new todo is added
+    // Verify that a new todo can be added
     expect(screen.getByText('New Test Todo')).toBeInTheDocument();
   });
 
-  // Test 3: Toggling todo completion
   test('toggles todo completion status when clicked', () => {
     render(<TodoList />);
     
-    const todoToToggle = screen.getByText('Learn React');
+    // Get a todo item
+    const todo = screen.getByText('Learn React');
     
-    // Initially should not have line-through
-    expect(todoToToggle).not.toHaveStyle('text-decoration: line-through');
+    // Initially should not be completed
+    expect(todo).not.toHaveStyle('text-decoration: line-through');
     
     // Click to toggle
-    fireEvent.click(todoToToggle);
+    fireEvent.click(todo);
     
-    // Should now have line-through
-    expect(todoToToggle).toHaveStyle('text-decoration: line-through');
+    // Verify that a todo item can be toggled between completed and not completed
+    expect(todo).toHaveStyle('text-decoration: line-through');
+    
+    // Click again to toggle back
+    fireEvent.click(todo);
+    
+    // Should not be completed again
+    expect(todo).not.toHaveStyle('text-decoration: line-through');
   });
 
-  // Test 4: Deleting a todo
   test('deletes a todo when delete button is clicked', () => {
     render(<TodoList />);
     
+    // Get initial count
+    const initialTodos = screen.getAllByTestId(/todo-item-/);
+    const initialCount = initialTodos.length;
+    
+    // Click delete button for first todo
     const deleteButton = screen.getByTestId('delete-button-1');
     fireEvent.click(deleteButton);
     
+    // Verify that a todo item can be deleted
     expect(screen.queryByText('Learn React')).not.toBeInTheDocument();
+    
+    // Verify count decreased
+    const currentTodos = screen.getAllByTestId(/todo-item-/);
+    expect(currentTodos.length).toBe(initialCount - 1);
   });
 
-  // Test 5: Form validation
   test('does not add empty todo', () => {
     render(<TodoList />);
     
     const input = screen.getByTestId('todo-input');
-    const addButton = screen.getByTestId('add-button');
+    const button = screen.getByTestId('add-button');
     
-    const initialTodos = screen.getAllByTestId(/todo-item-/).length;
+    // Get initial count
+    const initialTodos = screen.getAllByTestId(/todo-item-/);
+    const initialCount = initialTodos.length;
     
     // Try to add empty todo
     fireEvent.change(input, { target: { value: '   ' } });
-    fireEvent.click(addButton);
+    fireEvent.click(button);
     
-    const currentTodos = screen.getAllByTestId(/todo-item-/).length;
-    expect(currentTodos).toBe(initialTodos);
+    // Count should remain the same
+    const currentTodos = screen.getAllByTestId(/todo-item-/);
+    expect(currentTodos.length).toBe(initialCount);
   });
 });
