@@ -7,41 +7,41 @@ const TodoList = () => {
     { id: 3, text: 'Write Tests', completed: false }
   ]);
   
-  const [newTodo, setNewTodo] = useState('');
+  const [input, setInput] = useState('');
 
-  const handleAddTodo = (e) => {
+  const addTodo = (e) => {
     e.preventDefault();
-    if (!newTodo.trim()) return;
+    if (!input.trim()) return;
     
-    const todo = {
+    const newTodo = {
       id: todos.length + 1,
-      text: newTodo,
+      text: input,
       completed: false
     };
     
-    setTodos([...todos, todo]);
-    setNewTodo('');
+    setTodos([...todos, newTodo]);
+    setInput('');
   };
 
-  const handleToggle = (id) => {
+  const toggleTodo = (id) => {
     setTodos(todos.map(todo => 
       todo.id === id ? { ...todo, completed: !todo.completed } : todo
     ));
   };
 
-  const handleDelete = (id) => {
+  const deleteTodo = (id) => {
     setTodos(todos.filter(todo => todo.id !== id));
   };
 
   return (
-    <div className="TodoList">
+    <div>
       <h1>Todo List</h1>
-      <form onSubmit={handleAddTodo}>
+      <form onSubmit={addTodo}>
         <input
           type="text"
-          value={newTodo}
-          onChange={(e) => setNewTodo(e.target.value)}
-          placeholder="Add new todo"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Add todo"
           data-testid="todo-input"
         />
         <button type="submit" data-testid="add-button">
@@ -52,7 +52,7 @@ const TodoList = () => {
         {todos.map(todo => (
           <li key={todo.id} data-testid={`todo-item-${todo.id}`}>
             <span
-              onClick={() => handleToggle(todo.id)}
+              onClick={() => toggleTodo(todo.id)}
               style={{ 
                 textDecoration: todo.completed ? 'line-through' : 'none',
                 cursor: 'pointer'
@@ -62,7 +62,7 @@ const TodoList = () => {
               {todo.text}
             </span>
             <button
-              onClick={() => handleDelete(todo.id)}
+              onClick={() => deleteTodo(todo.id)}
               data-testid={`delete-button-${todo.id}`}
             >
               Delete
