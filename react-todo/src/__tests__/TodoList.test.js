@@ -2,44 +2,50 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import TodoList from '../components/TodoList';
 
-// Test names MUST match task description
+// Test suite for TodoList component
 describe('TodoList Component', () => {
-  // Test 1: Initial render
+  // Write Initial Render Test
   test('Verify that the TodoList component renders correctly', () => {
     render(<TodoList />);
     
+    // Ensure that the initial state (a few demo todos) is rendered
     expect(screen.getByText('Learn React')).toBeInTheDocument();
     expect(screen.getByText('Build Todo App')).toBeInTheDocument();
     expect(screen.getByText('Write Tests')).toBeInTheDocument();
   });
 
-  // Test 2: Adding todos
+  // Test Adding Todos
   test('Write a test to verify that a new todo can be added', () => {
     render(<TodoList />);
     
     const input = screen.getByTestId('todo-input');
     const button = screen.getByTestId('add-button');
     
-    fireEvent.change(input, { target: { value: 'Test Todo' } });
+    // Use fireEvent to simulate user input and form submission
+    fireEvent.change(input, { target: { value: 'New Test Todo' } });
     fireEvent.click(button);
     
-    expect(screen.getByText('Test Todo')).toBeInTheDocument();
+    expect(screen.getByText('New Test Todo')).toBeInTheDocument();
   });
 
-  // Test 3: Toggling todos
+  // Test Toggling Todos
   test('Write a test to verify that a todo item can be toggled between completed and not completed', () => {
     render(<TodoList />);
     
     const todo = screen.getByText('Learn React');
     
+    expect(todo).not.toHaveStyle('text-decoration: line-through');
+    
     fireEvent.click(todo);
+    
     expect(todo).toHaveStyle('text-decoration: line-through');
     
     fireEvent.click(todo);
+    
     expect(todo).not.toHaveStyle('text-decoration: line-through');
   });
 
-  // Test 4: Deleting todos
+  // Test Deleting Todos
   test('Write a test to verify that a todo item can be deleted', () => {
     render(<TodoList />);
     
